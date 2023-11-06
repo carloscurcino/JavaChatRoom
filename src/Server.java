@@ -23,7 +23,6 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
 
-                // Crie uma nova thread para lidar com cada cliente
                 Thread clientThread = new Thread(new ClientConnectionHandler(clientSocket));
                 clientThread.start();
             }
@@ -101,7 +100,6 @@ public class Server {
                         String message = clientMessage.substring(8);
                         sendToAllClients("MESSAGE " + clientName + ": " + message);
                     } else if (clientMessage.startsWith("PRIVATE ")) {
-                        // Adicione a lógica para lidar com mensagens privadas
                         String[] parts = clientMessage.split(" ", 3);
                         String targetUser = parts[1];
                         String privateMessage = parts[2];
@@ -113,9 +111,6 @@ public class Server {
                         writer.println("Server: - USERS: List users in the chat.");
                         writer.println("Server: - MESSAGE <text>: Send a public message.");
                         writer.println("Server: - PRIVATE <user> <text>: Send a private message to a user.");
-                        writer.println("Server: - JOIN_TOPIC <topic>: Join a specific conversation topic.");
-                        writer.println(
-                                "Server: - MESSAGE_TOPIC <topic> <text>: Send a message to a specific conversation topic.");
                         writer.println("Server: - HELP: Show available commands.");
                     } else {
                         System.out.println(clientMessage);

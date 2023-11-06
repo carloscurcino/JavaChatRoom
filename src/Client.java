@@ -22,10 +22,10 @@ public class Client {
                     while (true) {
                         message = consoleReader.readLine();
                         if (message.equalsIgnoreCase("LEAVE")) {
-                            writer.println("LEAVE " + clientName); // Send LEAVE command
+                            writer.println("LEAVE " + clientName);
                             break;
                         } else if (message.equalsIgnoreCase("USERS")) {
-                            writer.println("USERS"); // Send USERS command
+                            writer.println("USERS");
                         } else if (message.startsWith("PRIVATE ")) {
                             String[] parts = message.split(" ", 3);
                             String targetUser = parts[1];
@@ -34,7 +34,7 @@ public class Client {
                         } else if (message.equalsIgnoreCase("HELP")) {
                             writer.println("HELP");
                         } else {
-                            writer.println("MESSAGE " + message); // Send MESSAGE command with the client's name
+                            writer.println("MESSAGE " + message);
                         }
                     }
                 } catch (IOException e) {
