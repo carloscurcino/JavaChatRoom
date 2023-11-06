@@ -1,18 +1,65 @@
-## Getting Started
+# RFC (Request for Comments) - Mini Chat Application
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## 1. Introdução
 
-## Folder Structure
+Este documento descreve o funcionamento e os comandos disponíveis no serviço de chat desenvolvido em Java, que permite que os clientes se comuniquem entre si em um ambiente de chat.
 
-The workspace contains two folders by default, where:
+## 2. Palavras-Chave
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- **JOIN**: Usado para ingressar no chat com um nome de usuário.
+- **LEAVE**: Permite sair do chat.
+- **USERS**: Lista os usuários presentes no chat.
+- **MESSAGE <text>**: Envia uma mensagem pública para todos os usuários.
+- **PRIVATE <user> <text>**: Envia uma mensagem privada para um usuário específico.
+- **HELP**: Exibe a lista de comandos disponíveis.
+- **BLOCK <user>**: Bloqueia as mensagens de um usuário específico.
+- **UNBLOCK <user>**: Desbloqueia as mensagens de um usuário bloqueado.
+- **YODA**: Exibe um desenho do Yoda.
+- **COFFEE <user>**: Envia uma mensagem especial de café para um usuário.
+- **IMPORTANT <text>**: Envia uma mensagem importante com uma moldura retangular.
+- **MUTE <user>**: Muta um usuário específico.
+- **UNMUTE <user>**: Remove a mutação de um usuário.
+- **CHANGE_NAME <newName>**: Altera o nome de usuário.
+- **CLEAR**: Limpa o console.
+- **SET_STATUS <status>**: Define o status do usuário.
+- **STATUS <user>**: Exibe o status de um usuário.
+- **EMOJI <emoji>**: Envia um emoji.
+- **EMOJI_LIST**: Exibe a lista de emojis disponíveis.
+- **PLAY_MUSIC**: Toca uma mensagem de música.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## 3. Sintaxe e Semântica
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+### 3.1 Comandos Básicos
 
-## Dependency Management
+- **JOIN <name>**: Para ingressar no chat com um nome de usuário.
+- **LEAVE**: Para sair do chat.
+- **USERS**: Para listar os usuários presentes no chat.
+- **MESSAGE <text>**: Para enviar uma mensagem pública para todos os usuários.
+- **PRIVATE <user> <text>**: Para enviar uma mensagem privada para um usuário específico.
+- **HELP**: Para exibir a lista de comandos disponíveis.
+- **BLOCK <user>**: Para bloquear mensagens de um usuário específico.
+- **UNBLOCK <user>**: Para desbloquear mensagens de um usuário bloqueado.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+### 3.2 Comandos Especiais
+
+- **YODA**: Exibe um desenho do Yoda.
+- **COFFEE <user>**: Envia uma mensagem especial de café para um usuário.
+- **IMPORTANT <text>**: Envia uma mensagem importante com uma moldura retangular.
+- **MUTE <user>**: Muta um usuário específico.
+- **UNMUTE <user>**: Remove a mutação de um usuário.
+- **CHANGE_NAME <newName>**: Altera o nome de usuário.
+- **CLEAR**: Limpa o console.
+- **SET_STATUS <status>**: Define o status do usuário.
+- **STATUS <user>**: Exibe o status de um usuário.
+- **EMOJI <emoji>**: Envia um emoji.
+- **EMOJI_LIST**: Exibe a lista de emojis disponíveis.
+- **PLAY_MUSIC**: Toca uma mensagem de música.
+
+## 4. Limitações
+
+- O servidor não pode controlar a cor da fonte nos terminais dos clientes, pois isso depende das configurações individuais do cliente.
+- A reprodução de música é limitada a uma mensagem simples no cliente.
+
+## 5. Considerações Finais
+
+Este serviço de chat Java oferece uma variedade de recursos e comandos para permitir a comunicação entre os usuários. Os comandos são enviados pelo cliente e interpretados pelo servidor para executar ações específicas no ambiente de chat. Os usuários são incentivados a explorar e usar esses comandos para interagir e personalizar sua experiência no chat.
