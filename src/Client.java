@@ -61,6 +61,21 @@ public class Client {
                             String[] parts = message.split(" ", 2);
                             String newName = parts[1];
                             writer.println("CHANGE_NAME " + newName);
+                        } else if (message.equals("CLEAR")) {
+                            writer.println("CLEAR");
+                        } else if (message.startsWith("SET_STATUS ")) { // Define meu status atual
+                            writer.println("SET_STATUS " + message.substring(10));
+                        } else if (message.startsWith("STATUS ")) { // Visualiza o status de um client
+                            writer.println("STATUS " + message.substring(7));
+                        } else if (message.startsWith("EMOJI ")) {
+                            String[] parts = message.split(" ", 2);
+                            String emoji = parts[1];
+                            writer.println("EMOJI " + emoji);
+                        } else if (message.equals("EMOJI_LIST")) {
+                            writer.println("EMOJI_LIST");
+                        } else if (message.startsWith("THEME ")) {
+                            String theme = message.substring(6);
+                            writer.println("THEME " + theme);
                         } else {
                             writer.println("MESSAGE " + message);
                         }

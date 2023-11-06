@@ -17,6 +17,7 @@ public class Server {
     private static Map<String, PrintWriter> clientWritersMap = new HashMap<>();
     private static Map<String, Boolean> mutedUsers = new HashMap<>();
     static Set<String> blockedUsers = new HashSet<>();
+    private static Map<String, String> clientStatus = new HashMap<>();
 
     public static void main(String[] args) {
         ServerSocket serverSocket;
@@ -147,6 +148,23 @@ public class Server {
                         String newName = clientMessage.substring(12);
                         changeUserName(clientName, newName);
                         clientName = newName;
+                    } else if (clientMessage.startsWith("CLEAR")) {
+                        clearConsole();
+                    } else if (clientMessage.startsWith("SET_STATUS ")) {
+                        String newStatus = clientMessage.substring(10);
+                        setStatus(clientName, newStatus);
+                    } else if (clientMessage.startsWith("STATUS ")) {
+                        String requestedUser = clientMessage.substring(7);
+                        displayStatus(clientName, requestedUser);
+                    } else if (clientMessage.startsWith("EMOJI ")) {
+                        String[] parts = clientMessage.split(" ", 2);
+                        String emoji = parts[1];
+                        sendEmoji(clientName, emoji);
+                    } else if (clientMessage.equals("EMOJI_LIST")) {
+                        sendEmojiList(clientName);
+                    } else if (clientMessage.startsWith("THEME")) {
+                        String theme = clientMessage.substring(6);
+                        setTheme(clientName, theme);
                     } else {
                         if (!isMuted(clientName)) {
                             System.out.println(clientMessage);
@@ -271,4 +289,95 @@ public class Server {
         sendToAllClients("Server: " + oldName + " has changed their name to " + newName, oldName);
     }
 
+    private static void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void setStatus(String userName, String newStatus) {
+        synchronized (clientStatus) {
+            clientStatus.put(userName, newStatus);
+        }
+        sendPrivateMessage("Server", userName, "Your status has been set to:" + newStatus);
+    }
+
+    private static void displayStatus(String requester, String target) {
+        if (clientStatus.containsKey(target)) {
+            String statusMessage = "Status of " + target + ": " + clientStatus.get(target);
+            clientWritersMap.get(requester).println(statusMessage);
+        } else {
+            String statusMessage = "Status of " + target + ": Status not set";
+            clientWritersMap.get(requester).println(statusMessage);
+        }
+    }
+
+    private static void sendEmoji(String userName, String emoji) {
+        String mappedEmoji = mapEmoji(emoji);
+        synchronized (clientWriters) {
+            for (PrintWriter clientWriter : clientWriters) {
+                // Verifique se o remetente não está na lista de bloqueados do cliente atual.
+                if (!blockedUsers.contains(userName)) {
+                    clientWriter.println("EMOJI " + userName + ": " + mappedEmoji);
+                    clientWriter.flush();
+                }
+            }
+        }
+    }
+
+    private static void sendEmojiList(String userName) {
+        // Crie uma lista de emojis disponíveis (você pode armazená-los em uma lista ou
+        // array)
+        List<String> availableEmojis = new ArrayList<>();
+        availableEmojis.add("smile");
+        availableEmojis.add("heart");
+        availableEmojis.add("thumbsup");
+        availableEmojis.add("coffee");
+        availableEmojis.add("fish");
+
+        // Mapeie emojis personalizados
+        Map<String, String> customEmojis = new HashMap<>();
+        customEmojis.put("smile", ":D");
+        customEmojis.put("heart", "<3");
+        customEmojis.put("thumbsup", "|B");
+        customEmojis.put("coffee", "c[_]");
+        customEmojis.put("fish", "><>");
+
+        // Envie a lista de emojis para o cliente
+        PrintWriter clientWriter = clientWritersMap.get(userName);
+        if (clientWriter != null) {
+            clientWriter.println("Available Emojis:");
+            for (String emoji : availableEmojis) {
+                String emojiName = emoji;
+                String mappedEmoji = customEmojis.getOrDefault(emoji, emoji);
+                clientWriter.println(emojiName + " - " + mappedEmoji);
+            }
+            clientWriter.flush();
+        }
+    }
+
+    private static String mapEmoji(String emoji) {
+        // Mapeie emojis personalizados
+        Map<String, String> customEmojis = new HashMap<>();
+        customEmojis.put("smile", ":D");
+        customEmojis.put("heart", "<3");
+        customEmojis.put("thumbsup", "|B");
+        customEmojis.put("coffee", "c[_]");
+        customEmojis.put("fish", "><>");
+
+        // Verifique se o emoji é personalizado
+        String mappedEmoji = customEmojis.getOrDefault(emoji, emoji);
+
+        return mappedEmoji;
+    }
+
+    private static void setTheme(String userName, String theme) {
+        // Implemente a lógica para definir o tema do usuário
+    }
 }
