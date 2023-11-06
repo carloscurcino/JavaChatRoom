@@ -45,10 +45,6 @@ Este documento descreve o protocolo de comunicação e os comandos disponíveis 
 
 O servidor utiliza a porta 1337 para comunicação. Certifique-se de configurar seus clientes para se conectarem a esta porta ao usar o serviço de chat.
 
-## 5. Limitações
-
-- O servidor não pode controlar a cor da fonte nos terminais dos clientes, pois isso depende das configurações individuais do cliente.
-
-## 6. Considerações Finais
+## 5. Considerações Finais
 
 Este RFC descreve a sintaxe e a semântica dos comandos disponíveis para o servidor de chat. O protocolo permite uma variedade de interações e ações para os usuários do chat. Certifique-se de seguir as convenções de nomenclatura e as instruções específicas de cada comando ao utilizar o sistema. Certifique-se também de configurar os clientes para se conectarem à porta 1337 para se comunicarem com o servidor.
