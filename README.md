@@ -39,7 +39,7 @@ Este documento descreve o protocolo de comunicação e os comandos disponíveis 
 - **PLAY_MUSIC**: Inicia a reprodução de música.
 - **STOP_MUSIC**: Para a reprodução de música.
 
-**Observação**: Alguns comandos requerem apenas o TOKEN, como "LEAVE," "USERS," "YODA," "HELP," "UNBLOCK," "EMOJI," "EMOJI_LIST," "PLAY_MUSIC," "STOP_MUSIC," enquanto outros exigem conteúdo adicional, como "MESSAGE," "PRIVATE," "BLOCK," "COFFEE," "IMPORTANT," "MUTE," "UNMUTE," "CHANGE_NAME," "SET_STATUS," e "STATUS." Certifique-se de seguir a sintaxe adequada para cada tipo de comando.
+**Observação**: Alguns comandos requerem apenas o TOKEN, como "LEAVE," "USERS," "YODA," "HELP," "EMOJI_LIST," "PLAY_MUSIC," "STOP_MUSIC," enquanto outros exigem conteúdo adicional, como "MESSAGE," "PRIVATE," "BLOCK," "COFFEE," "IMPORTANT," "MUTE," "UNMUTE," "CHANGE_NAME," "SET_STATUS," e "STATUS." Certifique-se de seguir a sintaxe adequada para cada tipo de comando.
 
 ## 4. Porta de Comunicação
 
