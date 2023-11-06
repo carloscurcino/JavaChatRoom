@@ -47,6 +47,8 @@ public class Client {
                             String[] parts = message.split(" ", 2);
                             String targetUser = parts[1];
                             writer.println("COFFEE " + targetUser);
+                        } else if (message.startsWith("IMPORTANT")) {
+                            writer.println("IMPORTANT " + message);
                         } else {
                             writer.println("MESSAGE " + message);
                         }

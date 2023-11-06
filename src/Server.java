@@ -110,18 +110,22 @@ public class Server {
                         sendPrivateMessage(clientName, targetUser, privateMessage);
                     } else if (clientMessage.equalsIgnoreCase("HELP")) {
                         showCommandList(writer);
-                    } else if (clientMessage.startsWith("BLOCK ")) {
+                    } else if (clientMessage.startsWith("BLOCK")) {
                         String blockedUser = clientMessage.substring(6);
                         blockedUsers.add(blockedUser);
-                    } else if (clientMessage.startsWith("UNBLOCK ")) {
+                    } else if (clientMessage.startsWith("UNBLOCK")) {
                         String unblockedUser = clientMessage.substring(8);
                         blockedUsers.remove(unblockedUser);
                     } else if (clientMessage.equalsIgnoreCase("YODA")) {
                         drawYoda(writer);
-                    } else if (clientMessage.startsWith("COFFEE ")) {
+                    } else if (clientMessage.startsWith("COFFEE")) {
                         String[] parts = clientMessage.split(" ", 2);
                         String targetUser = parts[1];
                         sendCoffee(clientName, targetUser);
+                    } else if (clientMessage.startsWith("IMPORTANT")) {
+                        String message = clientMessage.substring(9); // Remova o "IMPORTANT " do início
+                        String messageImportantRectangle = generateRectangleMessage(message);
+                        sendToAllClients("IMPORTANT " + clientName + ": \n" + messageImportantRectangle, clientName);
                     } else {
                         System.out.println(clientMessage);
                     }
@@ -193,5 +197,30 @@ public class Server {
                 " ::::.  ` __::__ '  .::::    There is no try.\r\n" + //
                 " ::::::-:.`'..`'.:-::::::\r\n" + //
                 " ::::::::\\ `--' /::::::::              -Yoda");
+    }
+
+    // Função para criar uma mensagem com moldura retangular
+    private static String generateRectangleMessage(String message) {
+        int messageLength = message.length();
+        int rectangleWidth = messageLength + 4; // Largura da moldura
+
+        StringBuilder rectangleMessage = new StringBuilder();
+
+        // Linha superior da moldura
+        for (int i = 0; i < rectangleWidth; i++) {
+            rectangleMessage.append("*");
+        }
+
+        // Linhas com a mensagem e os caracteres da moldura
+        rectangleMessage.append("\n* ");
+        rectangleMessage.append(message);
+        rectangleMessage.append(" *\n");
+
+        // Linha inferior da moldura
+        for (int i = 0; i < rectangleWidth; i++) {
+            rectangleMessage.append("*");
+        }
+
+        return rectangleMessage.toString();
     }
 }
