@@ -61,7 +61,7 @@ public class Client {
                             String[] parts = message.split(" ", 2);
                             String newName = parts[1];
                             writer.println("CHANGE_NAME " + newName);
-                        } else if (message.equals("CLEAR")) {
+                        } else if (message.equalsIgnoreCase("CLEAR")) {
                             writer.println("CLEAR");
                         } else if (message.startsWith("SET_STATUS ")) { // Define meu status atual
                             writer.println("SET_STATUS " + message.substring(10));
@@ -71,11 +71,10 @@ public class Client {
                             String[] parts = message.split(" ", 2);
                             String emoji = parts[1];
                             writer.println("EMOJI " + emoji);
-                        } else if (message.equals("EMOJI_LIST")) {
+                        } else if (message.equalsIgnoreCase("EMOJI_LIST")) {
                             writer.println("EMOJI_LIST");
-                        } else if (message.startsWith("THEME ")) {
-                            String theme = message.substring(6);
-                            writer.println("THEME " + theme);
+                        } else if (message.equalsIgnoreCase("PLAY_MUSIC")) {
+                            writer.println("PLAY_MUSIC");
                         } else {
                             writer.println("MESSAGE " + message);
                         }

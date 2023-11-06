@@ -100,7 +100,7 @@ public class Server {
                             clientWritersMap.remove(leavingClientName);
                         }
                         break;
-                    } else if (clientMessage.equals("USERS")) {
+                    } else if (clientMessage.equalsIgnoreCase("USERS")) {
                         sendUserList();
                     } else if (clientMessage.startsWith("MESSAGE ")) {
                         String message = clientMessage.substring(8);
@@ -148,7 +148,7 @@ public class Server {
                         String newName = clientMessage.substring(12);
                         changeUserName(clientName, newName);
                         clientName = newName;
-                    } else if (clientMessage.startsWith("CLEAR")) {
+                    } else if (clientMessage.equalsIgnoreCase("CLEAR")) {
                         clearConsole();
                     } else if (clientMessage.startsWith("SET_STATUS ")) {
                         String newStatus = clientMessage.substring(10);
@@ -160,11 +160,10 @@ public class Server {
                         String[] parts = clientMessage.split(" ", 2);
                         String emoji = parts[1];
                         sendEmoji(clientName, emoji);
-                    } else if (clientMessage.equals("EMOJI_LIST")) {
+                    } else if (clientMessage.equalsIgnoreCase("EMOJI_LIST")) {
                         sendEmojiList(clientName);
-                    } else if (clientMessage.startsWith("THEME")) {
-                        String theme = clientMessage.substring(6);
-                        setTheme(clientName, theme);
+                    } else if (clientMessage.equalsIgnoreCase("PLAY_MUSIC")) {
+                        playMusic(writer);
                     } else {
                         if (!isMuted(clientName)) {
                             System.out.println(clientMessage);
@@ -377,7 +376,11 @@ public class Server {
         return mappedEmoji;
     }
 
-    private static void setTheme(String userName, String theme) {
-        // Implemente a lógica para definir o tema do usuário
+    public static void playMusic(PrintWriter writer) {
+        writer.println("\n" + //
+                "      » [Ela partiu - Tim Maia] «\n" + //
+                "           0:00 ─o───── 4:15\n" + //
+                "     <=>   <<   II   >>   %\n" + //
+                "");
     }
 }
