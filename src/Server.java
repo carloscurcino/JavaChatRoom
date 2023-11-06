@@ -100,6 +100,12 @@ public class Server {
                     } else if (clientMessage.startsWith("MESSAGE ")) {
                         String message = clientMessage.substring(8);
                         sendToAllClients("MESSAGE " + clientName + ": " + message);
+                    } else if (clientMessage.startsWith("PRIVATE ")) {
+                        // Adicione a lógica para lidar com mensagens privadas
+                        String[] parts = clientMessage.split(" ", 3);
+                        String targetUser = parts[1];
+                        String privateMessage = parts[2];
+                        sendPrivateMessage(clientName, targetUser, privateMessage);
                     } else {
                         System.out.println(clientMessage);
                     }
@@ -115,6 +121,16 @@ public class Server {
             for (PrintWriter clientWriter : clientWriters) {
                 clientWriter.println(message);
                 clientWriter.flush();
+            }
+        }
+    }
+
+    private static void sendPrivateMessage(String sender, String target, String message) {
+        synchronized (clientWritersMap) {
+            PrintWriter targetWriter = clientWritersMap.get(target);
+            if (targetWriter != null) {
+                targetWriter.println("PRIVATE " + sender + ": " + message);
+                targetWriter.flush();
             }
         }
     }

@@ -26,9 +26,13 @@ public class Client {
                             break;
                         } else if (message.equalsIgnoreCase("USERS")) {
                             writer.println("USERS"); // Send USERS command
+                        } else if (message.startsWith("PRIVATE ")) {
+                            String[] parts = message.split(" ", 3);
+                            String targetUser = parts[1];
+                            String privateMessage = parts[2];
+                            writer.println("PRIVATE " + targetUser + " " + privateMessage);
                         } else {
-                            writer.println("MESSAGE " + message); // Send MESSAGE command with the
-                                                                  // client's name
+                            writer.println("MESSAGE " + message); // Send MESSAGE command with the client's name
                         }
                     }
                 } catch (IOException e) {
