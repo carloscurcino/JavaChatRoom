@@ -33,6 +33,20 @@ public class Client {
                             writer.println("PRIVATE " + targetUser + " " + privateMessage);
                         } else if (message.equalsIgnoreCase("HELP")) {
                             writer.println("HELP");
+                        } else if (message.startsWith("BLOCK ")) {
+                            String[] parts = message.split(" ", 2);
+                            String targetUser = parts[1];
+                            writer.println("BLOCK " + targetUser);
+                        } else if (message.startsWith("UNBLOCK ")) {
+                            String[] parts = message.split(" ", 2);
+                            String targetUser = parts[1];
+                            writer.println("UNBLOCK " + targetUser);
+                        } else if (message.equalsIgnoreCase("YODA")) {
+                            writer.println("YODA");
+                        } else if (message.startsWith("COFFEE")) {
+                            String[] parts = message.split(" ", 2);
+                            String targetUser = parts[1];
+                            writer.println("COFFEE " + targetUser);
                         } else {
                             writer.println("MESSAGE " + message);
                         }

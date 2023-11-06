@@ -7,12 +7,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Server {
     private static List<PrintWriter> clientWriters = new ArrayList<>();
     private static Map<String, PrintWriter> clientWritersMap = new HashMap<>();
+    static Set<String> blockedUsers = new HashSet<>();
 
     public static void main(String[] args) {
         ServerSocket serverSocket;
@@ -54,7 +57,7 @@ public class Server {
                     synchronized (clientWritersMap) {
                         clientWritersMap.put(clientName, writer);
                     }
-                    sendToAllClients("Server: " + clientName + " has joined the chat.");
+                    sendToAllClients("Server: " + clientName + " has joined the chat.", clientName);
                     System.out.println("Server: " + clientName + " has joined the chat.");
 
                     // Passa o clientName para o ClientHandler
@@ -86,11 +89,12 @@ public class Server {
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
                 String clientMessage;
+
                 while ((clientMessage = reader.readLine()) != null) {
                     if (clientMessage.startsWith("LEAVE ")) {
                         String leavingClientName = clientMessage.substring(6);
                         synchronized (clientWritersMap) {
-                            sendToAllClients("Server: " + leavingClientName + " has left the chat.");
+                            sendToAllClients("Server: " + leavingClientName + " has left the chat.", clientName);
                             clientWritersMap.remove(leavingClientName);
                         }
                         break;
@@ -98,20 +102,26 @@ public class Server {
                         sendUserList();
                     } else if (clientMessage.startsWith("MESSAGE ")) {
                         String message = clientMessage.substring(8);
-                        sendToAllClients("MESSAGE " + clientName + ": " + message);
+                        sendToAllClients("MESSAGE " + clientName + ": " + message, clientName);
                     } else if (clientMessage.startsWith("PRIVATE ")) {
                         String[] parts = clientMessage.split(" ", 3);
                         String targetUser = parts[1];
                         String privateMessage = parts[2];
                         sendPrivateMessage(clientName, targetUser, privateMessage);
                     } else if (clientMessage.equalsIgnoreCase("HELP")) {
-                        writer.println("Server: Available commands:");
-                        writer.println("Server: - JOIN <name>: Join the chat with your name.");
-                        writer.println("Server: - LEAVE: Leave the chat.");
-                        writer.println("Server: - USERS: List users in the chat.");
-                        writer.println("Server: - MESSAGE <text>: Send a public message.");
-                        writer.println("Server: - PRIVATE <user> <text>: Send a private message to a user.");
-                        writer.println("Server: - HELP: Show available commands.");
+                        showCommandList(writer);
+                    } else if (clientMessage.startsWith("BLOCK ")) {
+                        String blockedUser = clientMessage.substring(6);
+                        blockedUsers.add(blockedUser);
+                    } else if (clientMessage.startsWith("UNBLOCK ")) {
+                        String unblockedUser = clientMessage.substring(8);
+                        blockedUsers.remove(unblockedUser);
+                    } else if (clientMessage.equalsIgnoreCase("YODA")) {
+                        drawYoda(writer);
+                    } else if (clientMessage.startsWith("COFFEE ")) {
+                        String[] parts = clientMessage.split(" ", 2);
+                        String targetUser = parts[1];
+                        sendCoffee(clientName, targetUser);
                     } else {
                         System.out.println(clientMessage);
                     }
@@ -122,11 +132,14 @@ public class Server {
         }
     }
 
-    private static void sendToAllClients(String message) {
+    private static void sendToAllClients(String message, String sender) {
         synchronized (clientWriters) {
             for (PrintWriter clientWriter : clientWriters) {
-                clientWriter.println(message);
-                clientWriter.flush();
+                // Verifique se o remetente não está na lista de bloqueados do cliente atual.
+                if (!blockedUsers.contains(sender)) {
+                    clientWriter.println(message);
+                    clientWriter.flush();
+                }
             }
         }
     }
@@ -136,6 +149,16 @@ public class Server {
             PrintWriter targetWriter = clientWritersMap.get(target);
             if (targetWriter != null) {
                 targetWriter.println("PRIVATE " + sender + ": " + message);
+                targetWriter.flush();
+            }
+        }
+    }
+
+    private static void sendCoffee(String sender, String target) {
+        synchronized (clientWritersMap) {
+            PrintWriter targetWriter = clientWritersMap.get(target);
+            if (targetWriter != null) {
+                targetWriter.println(sender + " is sending a c[_] coffe for you! ;)");
                 targetWriter.flush();
             }
         }
@@ -152,5 +175,23 @@ public class Server {
                 clientWriter.flush();
             }
         }
+    }
+
+    public static void showCommandList(PrintWriter writer) {
+        writer.println("Server: Available commands:");
+        writer.println("Server: - JOIN <name>: Join the chat with your name.");
+        writer.println("Server: - LEAVE: Leave the chat.");
+        writer.println("Server: - USERS: List users in the chat.");
+        writer.println("Server: - MESSAGE <text>: Send a public message.");
+        writer.println("Server: - PRIVATE <user> <text>: Send a private message to a user.");
+        writer.println("Server: - HELP: Show available commands.");
+    }
+
+    public static void drawYoda(PrintWriter writer) {
+        writer.println("           .--.                  Try not.\r\n" + //
+                " ::\\`--._,'.::.`._.--'/::     Do or do not.\r\n" + //
+                " ::::.  ` __::__ '  .::::    There is no try.\r\n" + //
+                " ::::::-:.`'..`'.:-::::::\r\n" + //
+                " ::::::::\\ `--' /::::::::              -Yoda");
     }
 }
