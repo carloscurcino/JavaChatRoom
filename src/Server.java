@@ -106,6 +106,17 @@ public class Server {
                         String targetUser = parts[1];
                         String privateMessage = parts[2];
                         sendPrivateMessage(clientName, targetUser, privateMessage);
+                    } else if (clientMessage.equalsIgnoreCase("HELP")) {
+                        writer.println("Server: Available commands:");
+                        writer.println("Server: - JOIN <name>: Join the chat with your name.");
+                        writer.println("Server: - LEAVE: Leave the chat.");
+                        writer.println("Server: - USERS: List users in the chat.");
+                        writer.println("Server: - MESSAGE <text>: Send a public message.");
+                        writer.println("Server: - PRIVATE <user> <text>: Send a private message to a user.");
+                        writer.println("Server: - JOIN_TOPIC <topic>: Join a specific conversation topic.");
+                        writer.println(
+                                "Server: - MESSAGE_TOPIC <topic> <text>: Send a message to a specific conversation topic.");
+                        writer.println("Server: - HELP: Show available commands.");
                     } else {
                         System.out.println(clientMessage);
                     }

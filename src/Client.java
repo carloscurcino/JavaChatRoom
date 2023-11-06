@@ -31,6 +31,8 @@ public class Client {
                             String targetUser = parts[1];
                             String privateMessage = parts[2];
                             writer.println("PRIVATE " + targetUser + " " + privateMessage);
+                        } else if (message.equalsIgnoreCase("HELP")) {
+                            writer.println("HELP");
                         } else {
                             writer.println("MESSAGE " + message); // Send MESSAGE command with the client's name
                         }
