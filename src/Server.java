@@ -22,7 +22,7 @@ public class Server {
     public static void main(String[] args) {
         ServerSocket serverSocket;
         try {
-            serverSocket = new ServerSocket(12345);
+            serverSocket = new ServerSocket(1337);
             System.out.println("Server is running and waiting for clients...");
 
             while (true) {
@@ -202,7 +202,7 @@ public class Server {
         synchronized (clientWritersMap) {
             PrintWriter targetWriter = clientWritersMap.get(target);
             if (targetWriter != null) {
-                targetWriter.println(sender + " is sending a c[_] coffe for you! ;)");
+                targetWriter.println(sender + " is sending a c[_] coffee for you! ;)");
                 targetWriter.flush();
             }
         }
@@ -229,6 +229,20 @@ public class Server {
         writer.println("Server: - MESSAGE <text>: Send a public message.");
         writer.println("Server: - PRIVATE <user> <text>: Send a private message to a user.");
         writer.println("Server: - HELP: Show available commands.");
+        writer.println("Server: - BLOCK <user>: Block messages from a specific user.");
+        writer.println("Server: - UNBLOCK <user>: Unblock messages from a blocked user.");
+        writer.println("Server: - YODA: Display a drawing of Yoda.");
+        writer.println("Server: - COFFEE <user>: Send a special coffee message to a user.");
+        writer.println("Server: - IMPORTANT <text>: Send an important message with a rectangular frame.");
+        writer.println("Server: - MUTE <user>: Mute a specific user.");
+        writer.println("Server: - UNMUTE <user>: Remove muting from a user.");
+        writer.println("Server: - CHANGE_NAME <newName>: Change the username.");
+        writer.println("Server: - CLEAR: Clear the console.");
+        writer.println("Server: - SET_STATUS <status>: Set the user's status.");
+        writer.println("Server: - STATUS <user>: Display a user's status.");
+        writer.println("Server: - EMOJI <emoji>: Send an emoji.");
+        writer.println("Server: - EMOJI_LIST: Display the list of available emojis.");
+        writer.println("Server: - PLAY_MUSIC: Play a music message.");
     }
 
     public static void drawYoda(PrintWriter writer) {
@@ -293,7 +307,7 @@ public class Server {
             if (System.getProperty("os.name").contains("Windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } else {
-                Runtime.getRuntime().exec("clear");
+                new ProcessBuilder("bash", "-c", "clear").inheritIO().start().waitFor();
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

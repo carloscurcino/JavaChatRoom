@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 public class Client {
     public static void main(String[] args) {
         try {
-            Socket socket = new Socket("localhost", 12345);
+            Socket socket = new Socket("localhost", 1337);
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
             BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
 

@@ -39,11 +39,15 @@ Este documento descreve o protocolo de comunicação e os comandos disponíveis 
 
 **Observação**: Alguns comandos requerem apenas o TOKEN, como "LEAVE," "USERS," "YODA," "HELP," "CLEAR," "UNBLOCK," "EMOJI," enquanto outros exigem conteúdo adicional, como "MESSAGE," "PRIVATE," "BLOCK," "COFFEE," "IMPORTANT," "MUTE," "UNMUTE," "CHANGE_NAME," "SET_STATUS," "STATUS," e "EMOJI." Certifique-se de seguir a sintaxe adequada para cada tipo de comando.
 
-## 4. Limitações
+## 4. Porta de Comunicação
+
+O servidor utiliza a porta 1337 para comunicação. Certifique-se de configurar seus clientes para se conectarem a esta porta ao usar o serviço de chat.
+
+## 5. Limitações
 
 - O servidor não pode controlar a cor da fonte nos terminais dos clientes, pois isso depende das configurações individuais do cliente, por isso optei por retirar a função.
 - A reprodução de música é limitada a uma mensagem simples no cliente.
 
-## 5. Considerações Finais
+## 6. Considerações Finais
 
-Este RFC descreve a sintaxe e a semântica dos comandos disponíveis para o servidor de chat. O protocolo permite uma variedade de interações e ações para os usuários do chat. Certifique-se de seguir as convenções de nomenclatura e as instruções específicas de cada comando ao utilizar o sistema.
+Este RFC descreve a sintaxe e a semântica dos comandos disponíveis para o servidor de chat. O protocolo permite uma variedade de interações e ações para os usuários do chat. Certifique-se de seguir as convenções de nomenclatura e as instruções específicas de cada comando ao utilizar o sistema. Certifique-se também de configurar os clientes para se conectarem à porta 1337 para se comunicarem com o servidor.
