@@ -4,6 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.OutputStreamWriter;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,12 +13,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 public class Server {
     private static List<PrintWriter> clientWriters = new ArrayList<>();
     private static Map<String, PrintWriter> clientWritersMap = new HashMap<>();
     private static Map<String, Boolean> mutedUsers = new HashMap<>();
     static Set<String> blockedUsers = new HashSet<>();
     private static Map<String, String> clientStatus = new HashMap<>();
+    private static Clip musicClip;
+    private static boolean isMusicPlaying = false;
 
     public static void main(String[] args) {
         ServerSocket serverSocket;
@@ -148,8 +155,6 @@ public class Server {
                         String newName = clientMessage.substring(12);
                         changeUserName(clientName, newName);
                         clientName = newName;
-                    } else if (clientMessage.equalsIgnoreCase("CLEAR")) {
-                        clearConsole();
                     } else if (clientMessage.startsWith("SET_STATUS ")) {
                         String newStatus = clientMessage.substring(10);
                         setStatus(clientName, newStatus);
@@ -164,6 +169,8 @@ public class Server {
                         sendEmojiList(clientName);
                     } else if (clientMessage.equalsIgnoreCase("PLAY_MUSIC")) {
                         playMusic(writer);
+                    } else if (clientMessage.equalsIgnoreCase("STOP_MUSIC")) {
+                        stopMusic(writer);
                     } else {
                         if (!isMuted(clientName)) {
                             System.out.println(clientMessage);
@@ -237,12 +244,12 @@ public class Server {
         writer.println("Server: - MUTE <user>: Mute a specific user.");
         writer.println("Server: - UNMUTE <user>: Remove muting from a user.");
         writer.println("Server: - CHANGE_NAME <newName>: Change the username.");
-        writer.println("Server: - CLEAR: Clear the console.");
         writer.println("Server: - SET_STATUS <status>: Set the user's status.");
         writer.println("Server: - STATUS <user>: Display a user's status.");
         writer.println("Server: - EMOJI <emoji>: Send an emoji.");
         writer.println("Server: - EMOJI_LIST: Display the list of available emojis.");
         writer.println("Server: - PLAY_MUSIC: Play a music message.");
+        writer.println("Server: - STOP_MUSIC: Stop the music.");
     }
 
     public static void drawYoda(PrintWriter writer) {
@@ -300,18 +307,6 @@ public class Server {
         }
 
         sendToAllClients("Server: " + oldName + " has changed their name to " + newName, oldName);
-    }
-
-    private static void clearConsole() {
-        try {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                new ProcessBuilder("bash", "-c", "clear").inheritIO().start().waitFor();
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private static void setStatus(String userName, String newStatus) {
@@ -396,5 +391,33 @@ public class Server {
                 "           0:00 ─o───── 4:15\n" + //
                 "     <=>   <<   II   >>   %\n" + //
                 "");
+
+        try {
+            // Carrega o arquivo de áudio
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("TimMaia–ElaPartiu.wav"));
+
+            // Obtém um clip de áudio
+            musicClip = AudioSystem.getClip();
+
+            // Abre o arquivo de áudio
+            musicClip.open(audioInputStream);
+
+            // Reproduz o áudio
+            musicClip.start();
+            isMusicPlaying = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void stopMusic(PrintWriter writer) {
+        if (isMusicPlaying && musicClip != null) {
+            musicClip.stop();
+            musicClip.close();
+            writer.println("Server: Music has been stopped.");
+            isMusicPlaying = false;
+        } else {
+            writer.println("Server: No music is currently playing.");
+        }
     }
 }

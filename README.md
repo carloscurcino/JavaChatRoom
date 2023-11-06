@@ -32,12 +32,14 @@ Este documento descreve o protocolo de comunicação e os comandos disponíveis 
 - **MUTE \<user>**: Muta um usuário específico.
 - **UNMUTE \<user>**: Remove a mutação de um usuário.
 - **CHANGE_NAME \<newName>**: Altera o nome de usuário.
-- **CLEAR**: Limpa o console.
 - **SET_STATUS \<status>**: Define o status do usuário.
 - **STATUS \<user>**: Exibe o status de um usuário.
 - **EMOJI \<emoji>**: Envia um emoji.
+- **EMOJI_LIST**: Exibe a lista de emojis disponíveis.
+- **PLAY_MUSIC**: Inicia a reprodução de música.
+- **STOP_MUSIC**: Para a reprodução de música.
 
-**Observação**: Alguns comandos requerem apenas o TOKEN, como "LEAVE," "USERS," "YODA," "HELP," "CLEAR," "UNBLOCK," "EMOJI," enquanto outros exigem conteúdo adicional, como "MESSAGE," "PRIVATE," "BLOCK," "COFFEE," "IMPORTANT," "MUTE," "UNMUTE," "CHANGE_NAME," "SET_STATUS," "STATUS," e "EMOJI." Certifique-se de seguir a sintaxe adequada para cada tipo de comando.
+**Observação**: Alguns comandos requerem apenas o TOKEN, como "LEAVE," "USERS," "YODA," "HELP," "CLEAR," "UNBLOCK," "EMOJI," "EMOJI_LIST," "PLAY_MUSIC," "STOP_MUSIC," enquanto outros exigem conteúdo adicional, como "MESSAGE," "PRIVATE," "BLOCK," "COFFEE," "IMPORTANT," "MUTE," "UNMUTE," "CHANGE_NAME," "SET_STATUS," e "STATUS." Certifique-se de seguir a sintaxe adequada para cada tipo de comando.
 
 ## 4. Porta de Comunicação
 
@@ -45,8 +47,7 @@ O servidor utiliza a porta 1337 para comunicação. Certifique-se de configurar 
 
 ## 5. Limitações
 
-- O servidor não pode controlar a cor da fonte nos terminais dos clientes, pois isso depende das configurações individuais do cliente, por isso optei por retirar a função.
-- A reprodução de música é limitada a uma mensagem simples no cliente.
+- O servidor não pode controlar a cor da fonte nos terminais dos clientes, pois isso depende das configurações individuais do cliente.
 
 ## 6. Considerações Finais
 
