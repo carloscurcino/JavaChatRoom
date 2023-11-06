@@ -9,21 +9,27 @@ public class Client {
     public static void main(String[] args) {
         try {
             Socket socket = new Socket("localhost", 12345);
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true); // Use
-                                                                                                                   // UTF-8
-                                                                                                                   // encoding
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
             BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
             System.out.print("Enter your name: ");
             String clientName = consoleReader.readLine();
-            writer.println(clientName);
+            writer.println("JOIN " + clientName);
 
             Thread messageSender = new Thread(() -> {
                 try {
                     String message;
                     while (true) {
                         message = consoleReader.readLine();
-                        writer.println(message);
+                        if (message.equalsIgnoreCase("LEAVE")) {
+                            writer.println("LEAVE " + clientName); // Send LEAVE command
+                            break;
+                        } else if (message.equalsIgnoreCase("USERS")) {
+                            writer.println("USERS"); // Send USERS command
+                        } else {
+                            writer.println("MESSAGE " + message); // Send MESSAGE command with the
+                                                                  // client's name
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -31,9 +37,7 @@ public class Client {
             });
             messageSender.start();
 
-            BufferedReader serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8")); // Use
-                                                                                                                       // UTF-8
-                                                                                                                       // encoding
+            BufferedReader serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
             String serverMessage;
             while ((serverMessage = serverReader.readLine()) != null) {
                 System.out.println(serverMessage);
