@@ -143,6 +143,10 @@ public class Server {
                         } else {
                             writer.println("Server: " + unmutedUser + " is not currently muted.");
                         }
+                    } else if (clientMessage.startsWith("CHANGE_NAME ")) {
+                        String newName = clientMessage.substring(12);
+                        changeUserName(clientName, newName);
+                        clientName = newName;
                     } else {
                         if (!isMuted(clientName)) {
                             System.out.println(clientMessage);
@@ -246,4 +250,25 @@ public class Server {
     private static boolean isMuted(String userName) {
         return mutedUsers.containsKey(userName) && mutedUsers.get(userName);
     }
+
+    private static void changeUserName(String oldName, String newName) {
+        if (oldName.equals(newName)) {
+            return; // O novo nome é o mesmo que o antigo, não é necessário fazer nada.
+        }
+
+        PrintWriter oldWriter = null;
+        synchronized (clientWritersMap) {
+            if (clientWritersMap.containsKey(oldName)) {
+                oldWriter = clientWritersMap.remove(oldName); // Remove o nome de usuário antigo
+                clientWritersMap.put(newName, oldWriter); // Adiciona o novo nome de usuário
+            }
+        }
+
+        if (oldWriter != null) {
+            oldWriter.println("Server: Your name has been changed to " + newName);
+        }
+
+        sendToAllClients("Server: " + oldName + " has changed their name to " + newName, oldName);
+    }
+
 }

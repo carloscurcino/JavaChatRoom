@@ -57,6 +57,10 @@ public class Client {
                             String[] parts = message.split(" ", 2);
                             String targetUser = parts[1];
                             writer.println("UNMUTE " + targetUser);
+                        } else if (message.startsWith("CHANGE_NAME")) {
+                            String[] parts = message.split(" ", 2);
+                            String newName = parts[1];
+                            writer.println("CHANGE_NAME " + newName);
                         } else {
                             writer.println("MESSAGE " + message);
                         }
