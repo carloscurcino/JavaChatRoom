@@ -15,6 +15,7 @@ import java.util.Set;
 public class Server {
     private static List<PrintWriter> clientWriters = new ArrayList<>();
     private static Map<String, PrintWriter> clientWritersMap = new HashMap<>();
+    private static Map<String, Boolean> mutedUsers = new HashMap<>();
     static Set<String> blockedUsers = new HashSet<>();
 
     public static void main(String[] args) {
@@ -126,8 +127,26 @@ public class Server {
                         String message = clientMessage.substring(9); // Remova o "IMPORTANT " do início
                         String messageImportantRectangle = generateRectangleMessage(message);
                         sendToAllClients("IMPORTANT " + clientName + ": \n" + messageImportantRectangle, clientName);
+                    } else if (clientMessage.startsWith("MUTE") || clientMessage.startsWith("MUTE ")) {
+                        String mutedUser = clientMessage.substring(5);
+                        if (!mutedUsers.containsKey(mutedUser)) {
+                            mutedUsers.put(mutedUser, true);
+                            writer.println("Server: " + mutedUser + " has been muted.");
+                        } else {
+                            writer.println("Server: " + mutedUser + " is already muted.");
+                        }
+                    } else if (clientMessage.startsWith("UNMUTE") || clientMessage.startsWith("UNMUTE ")) {
+                        String unmutedUser = clientMessage.substring(7);
+                        if (mutedUsers.containsKey(unmutedUser)) {
+                            mutedUsers.remove(unmutedUser);
+                            writer.println("Server: " + unmutedUser + " has been unmuted.");
+                        } else {
+                            writer.println("Server: " + unmutedUser + " is not currently muted.");
+                        }
                     } else {
-                        System.out.println(clientMessage);
+                        if (!isMuted(clientName)) {
+                            System.out.println(clientMessage);
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -222,5 +241,9 @@ public class Server {
         }
 
         return rectangleMessage.toString();
+    }
+
+    private static boolean isMuted(String userName) {
+        return mutedUsers.containsKey(userName) && mutedUsers.get(userName);
     }
 }

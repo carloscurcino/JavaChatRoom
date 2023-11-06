@@ -49,6 +49,14 @@ public class Client {
                             writer.println("COFFEE " + targetUser);
                         } else if (message.startsWith("IMPORTANT")) {
                             writer.println("IMPORTANT " + message);
+                        } else if (message.startsWith("MUTE")) {
+                            String[] parts = message.split(" ", 2);
+                            String targetUser = parts[1];
+                            writer.println("MUTE " + targetUser);
+                        } else if (message.startsWith("UNMUTE")) {
+                            String[] parts = message.split(" ", 2);
+                            String targetUser = parts[1];
+                            writer.println("UNMUTE " + targetUser);
                         } else {
                             writer.println("MESSAGE " + message);
                         }
