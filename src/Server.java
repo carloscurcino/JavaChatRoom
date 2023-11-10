@@ -20,7 +20,6 @@ import javax.sound.sampled.Clip;
 public class Server {
     private static List<PrintWriter> clientWriters = new ArrayList<>();
     private static Map<String, PrintWriter> clientWritersMap = new HashMap<>();
-    private static Map<String, Boolean> mutedUsers = new HashMap<>();
     static Set<String> blockedUsers = new HashSet<>();
     private static Map<String, String> clientStatus = new HashMap<>();
     private static Clip musicClip;
@@ -132,25 +131,9 @@ public class Server {
                         String targetUser = parts[1];
                         sendCoffee(clientName, targetUser);
                     } else if (clientMessage.startsWith("IMPORTANT")) {
-                        String message = clientMessage.substring(9); // Remova o "IMPORTANT " do início
+                        String message = clientMessage.substring(9);
                         String messageImportantRectangle = generateRectangleMessage(message);
-                        sendToAllClients("IMPORTANT " + clientName + ": \n" + messageImportantRectangle, clientName);
-                    } else if (clientMessage.startsWith("MUTE") || clientMessage.startsWith("MUTE ")) {
-                        String mutedUser = clientMessage.substring(5);
-                        if (!mutedUsers.containsKey(mutedUser)) {
-                            mutedUsers.put(mutedUser, true);
-                            writer.println("Server: " + mutedUser + " has been muted.");
-                        } else {
-                            writer.println("Server: " + mutedUser + " is already muted.");
-                        }
-                    } else if (clientMessage.startsWith("UNMUTE") || clientMessage.startsWith("UNMUTE ")) {
-                        String unmutedUser = clientMessage.substring(7);
-                        if (mutedUsers.containsKey(unmutedUser)) {
-                            mutedUsers.remove(unmutedUser);
-                            writer.println("Server: " + unmutedUser + " has been unmuted.");
-                        } else {
-                            writer.println("Server: " + unmutedUser + " is not currently muted.");
-                        }
+                        sendToAllClients(clientName + ": \n" + messageImportantRectangle, clientName);
                     } else if (clientMessage.startsWith("CHANGE_NAME ")) {
                         String newName = clientMessage.substring(12);
                         changeUserName(clientName, newName);
@@ -172,9 +155,7 @@ public class Server {
                     } else if (clientMessage.equalsIgnoreCase("STOP_MUSIC")) {
                         stopMusic(writer);
                     } else {
-                        if (!isMuted(clientName)) {
-                            System.out.println(clientMessage);
-                        }
+                        System.out.println(clientMessage);
                     }
                 }
             } catch (IOException e) {
@@ -186,7 +167,6 @@ public class Server {
     private static void sendToAllClients(String message, String sender) {
         synchronized (clientWriters) {
             for (PrintWriter clientWriter : clientWriters) {
-                // Verifique se o remetente não está na lista de bloqueados do cliente atual.
                 if (!blockedUsers.contains(sender)) {
                     clientWriter.println(message);
                     clientWriter.flush();
@@ -241,8 +221,6 @@ public class Server {
         writer.println("Server: - YODA: Display a drawing of Yoda.");
         writer.println("Server: - COFFEE <user>: Send a special coffee message to a user.");
         writer.println("Server: - IMPORTANT <text>: Send an important message with a rectangular frame.");
-        writer.println("Server: - MUTE <user>: Mute a specific user.");
-        writer.println("Server: - UNMUTE <user>: Remove muting from a user.");
         writer.println("Server: - CHANGE_NAME <newName>: Change the username.");
         writer.println("Server: - SET_STATUS <status>: Set the user's status.");
         writer.println("Server: - STATUS <user>: Display a user's status.");
@@ -283,10 +261,6 @@ public class Server {
         }
 
         return rectangleMessage.toString();
-    }
-
-    private static boolean isMuted(String userName) {
-        return mutedUsers.containsKey(userName) && mutedUsers.get(userName);
     }
 
     private static void changeUserName(String oldName, String newName) {
@@ -330,7 +304,6 @@ public class Server {
         String mappedEmoji = mapEmoji(emoji);
         synchronized (clientWriters) {
             for (PrintWriter clientWriter : clientWriters) {
-                // Verifique se o remetente não está na lista de bloqueados do cliente atual.
                 if (!blockedUsers.contains(userName)) {
                     clientWriter.println("EMOJI " + userName + ": " + mappedEmoji);
                     clientWriter.flush();
@@ -340,8 +313,6 @@ public class Server {
     }
 
     private static void sendEmojiList(String userName) {
-        // Crie uma lista de emojis disponíveis (você pode armazená-los em uma lista ou
-        // array)
         List<String> availableEmojis = new ArrayList<>();
         availableEmojis.add("smile");
         availableEmojis.add("heart");
@@ -349,7 +320,6 @@ public class Server {
         availableEmojis.add("coffee");
         availableEmojis.add("fish");
 
-        // Mapeie emojis personalizados
         Map<String, String> customEmojis = new HashMap<>();
         customEmojis.put("smile", ":D");
         customEmojis.put("heart", "<3");
@@ -357,7 +327,6 @@ public class Server {
         customEmojis.put("coffee", "c[_]");
         customEmojis.put("fish", "><>");
 
-        // Envie a lista de emojis para o cliente
         PrintWriter clientWriter = clientWritersMap.get(userName);
         if (clientWriter != null) {
             clientWriter.println("Available Emojis:");
@@ -371,7 +340,6 @@ public class Server {
     }
 
     private static String mapEmoji(String emoji) {
-        // Mapeie emojis personalizados
         Map<String, String> customEmojis = new HashMap<>();
         customEmojis.put("smile", ":D");
         customEmojis.put("heart", "<3");
@@ -379,7 +347,6 @@ public class Server {
         customEmojis.put("coffee", "c[_]");
         customEmojis.put("fish", "><>");
 
-        // Verifique se o emoji é personalizado
         String mappedEmoji = customEmojis.getOrDefault(emoji, emoji);
 
         return mappedEmoji;
