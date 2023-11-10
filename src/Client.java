@@ -26,38 +26,38 @@ public class Client {
                             break;
                         } else if (message.equalsIgnoreCase("USERS")) {
                             writer.println("USERS");
-                        } else if (message.startsWith("PRIVATE ")) {
+                        } else if (message.toUpperCase().startsWith("PRIVATE ")) {
                             String[] parts = message.split(" ", 3);
                             String targetUser = parts[1];
                             String privateMessage = parts[2];
                             writer.println("PRIVATE " + targetUser + " " + privateMessage);
                         } else if (message.equalsIgnoreCase("HELP")) {
                             writer.println("HELP");
-                        } else if (message.startsWith("BLOCK ")) {
+                        } else if (message.toUpperCase().startsWith("BLOCK ")) {
                             String[] parts = message.split(" ", 2);
                             String targetUser = parts[1];
                             writer.println("BLOCK " + targetUser);
-                        } else if (message.startsWith("UNBLOCK ")) {
+                        } else if (message.toUpperCase().startsWith("UNBLOCK ")) {
                             String[] parts = message.split(" ", 2);
                             String targetUser = parts[1];
                             writer.println("UNBLOCK " + targetUser);
                         } else if (message.equalsIgnoreCase("YODA")) {
                             writer.println("YODA");
-                        } else if (message.startsWith("COFFEE")) {
+                        } else if (message.toUpperCase().startsWith("COFFEE")) {
                             String[] parts = message.split(" ", 2);
                             String targetUser = parts[1];
                             writer.println("COFFEE " + targetUser);
-                        } else if (message.startsWith("IMPORTANT")) {
+                        } else if (message.toUpperCase().startsWith("IMPORTANT")) {
                             writer.println("IMPORTANT " + message);
-                        } else if (message.startsWith("CHANGE_NAME")) {
+                        } else if (message.toUpperCase().startsWith("CHANGE_NAME")) {
                             String[] parts = message.split(" ", 2);
                             String newName = parts[1];
                             writer.println("CHANGE_NAME " + newName);
-                        } else if (message.startsWith("SET_STATUS ")) { // Define meu status atual
+                        } else if (message.toUpperCase().startsWith("SET_STATUS ")) { // Define meu status atual
                             writer.println("SET_STATUS " + message.substring(10));
-                        } else if (message.startsWith("STATUS ")) { // Visualiza o status de um client
+                        } else if (message.toUpperCase().startsWith("STATUS ")) { // Visualiza o status de um client
                             writer.println("STATUS " + message.substring(7));
-                        } else if (message.startsWith("EMOJI ")) {
+                        } else if (message.toUpperCase().startsWith("EMOJI ")) {
                             String[] parts = message.split(" ", 2);
                             String emoji = parts[1];
                             writer.println("EMOJI " + emoji);

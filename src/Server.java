@@ -60,7 +60,7 @@ public class Server {
                         new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
                 String clientMessage = reader.readLine();
 
-                if (clientMessage != null && clientMessage.startsWith("JOIN ")) {
+                if (clientMessage != null && clientMessage.toUpperCase().startsWith("JOIN ")) {
                     String clientName = clientMessage.substring(5);
                     synchronized (clientWritersMap) {
                         clientWritersMap.put(clientName, writer);
@@ -99,7 +99,7 @@ public class Server {
                 String clientMessage;
 
                 while ((clientMessage = reader.readLine()) != null) {
-                    if (clientMessage.startsWith("LEAVE ")) {
+                    if (clientMessage.toUpperCase().startsWith("LEAVE ")) {
                         String leavingClientName = clientMessage.substring(6);
                         synchronized (clientWritersMap) {
                             sendToAllClients("Server: " + leavingClientName + " has left the chat.", clientName);
@@ -108,43 +108,43 @@ public class Server {
                         break;
                     } else if (clientMessage.equalsIgnoreCase("USERS")) {
                         sendUserList();
-                    } else if (clientMessage.startsWith("MESSAGE ")) {
+                    } else if (clientMessage.toUpperCase().startsWith("MESSAGE ")) {
                         String message = clientMessage.substring(8);
                         sendToAllClients("MESSAGE " + clientName + ": " + message, clientName);
-                    } else if (clientMessage.startsWith("PRIVATE ")) {
+                    } else if (clientMessage.toUpperCase().startsWith("PRIVATE ")) {
                         String[] parts = clientMessage.split(" ", 3);
                         String targetUser = parts[1];
                         String privateMessage = parts[2];
                         sendPrivateMessage(clientName, targetUser, privateMessage);
                     } else if (clientMessage.equalsIgnoreCase("HELP")) {
                         showCommandList(writer);
-                    } else if (clientMessage.startsWith("BLOCK")) {
+                    } else if (clientMessage.toUpperCase().startsWith("BLOCK")) {
                         String blockedUser = clientMessage.substring(6);
                         blockedUsers.add(blockedUser);
-                    } else if (clientMessage.startsWith("UNBLOCK")) {
+                    } else if (clientMessage.toUpperCase().startsWith("UNBLOCK")) {
                         String unblockedUser = clientMessage.substring(8);
                         blockedUsers.remove(unblockedUser);
                     } else if (clientMessage.equalsIgnoreCase("YODA")) {
                         drawYoda(writer);
-                    } else if (clientMessage.startsWith("COFFEE")) {
+                    } else if (clientMessage.toUpperCase().startsWith("COFFEE")) {
                         String[] parts = clientMessage.split(" ", 2);
                         String targetUser = parts[1];
                         sendCoffee(clientName, targetUser);
-                    } else if (clientMessage.startsWith("IMPORTANT")) {
+                    } else if (clientMessage.toUpperCase().startsWith("IMPORTANT")) {
                         String message = clientMessage.substring(9);
                         String messageImportantRectangle = generateRectangleMessage(message);
                         sendToAllClients(clientName + ": \n" + messageImportantRectangle, clientName);
-                    } else if (clientMessage.startsWith("CHANGE_NAME ")) {
+                    } else if (clientMessage.toUpperCase().startsWith("CHANGE_NAME ")) {
                         String newName = clientMessage.substring(12);
                         changeUserName(clientName, newName);
                         clientName = newName;
-                    } else if (clientMessage.startsWith("SET_STATUS ")) {
+                    } else if (clientMessage.toUpperCase().startsWith("SET_STATUS ")) {
                         String newStatus = clientMessage.substring(10);
                         setStatus(clientName, newStatus);
-                    } else if (clientMessage.startsWith("STATUS ")) {
+                    } else if (clientMessage.toUpperCase().startsWith("STATUS ")) {
                         String requestedUser = clientMessage.substring(7);
                         displayStatus(clientName, requestedUser);
-                    } else if (clientMessage.startsWith("EMOJI ")) {
+                    } else if (clientMessage.toUpperCase().startsWith("EMOJI ")) {
                         String[] parts = clientMessage.split(" ", 2);
                         String emoji = parts[1];
                         sendEmoji(clientName, emoji);
